@@ -1,0 +1,77 @@
+{
+    "oi": [
+        "Olá!",
+        "Oi! Tudo bem?",
+        "E aí ??"
+    ],
+    "olá": [
+        "Oi! Como posso te ajudar?",
+        "Olá! Tudo certo?"
+    ],
+    "bom dia": [
+        "Bom dia! ??",
+        "Bom dia! Como você está?"
+    ],
+    "boa tarde": [
+        "Boa tarde!",
+        "Tudo bem por aí?"
+    ],
+    "boa noite": [
+        "Boa noite!",
+        "Como foi seu dia?"
+    ],
+    "como você está": [
+        "Estou bem! E você?",
+        "Funcionando perfeitamente!"
+    ],
+    "qual seu nome": [
+        "Eu sou o C.H.A.R.L.E.S! Uma Inteligência Artificial criada para te ajudar!",
+        "Pode me chamar de C.H.A.R.L.E.S"
+    ],
+    "quem te criou": [
+        "Fui criado por um humano curioso"
+    ],
+    "obrigado": [
+        "De nada!",
+        "Sempre à disposição!"
+    ],
+    "valeu": [
+        "Tamo junto!",
+        "Por nada!"
+    ],
+    "tchau": [
+        "Até mais!",
+        "Falou!",
+        "Tchau!!"
+    ],
+    "até logo": [
+        "Até logo!",
+        "Nos vemos em breve !!"
+    ],
+    "o que você faz": [
+        "Converso com você !!",
+        "Posso responder perguntas simples!"
+    ],
+    "me ajuda": [
+        "Claro! Com o que você precisa?",
+        "Estou aqui pra ajudar!"
+    ],
+    "qual sua cor favorita": [
+        "Gosto de azul !!",
+        "Curto várias cores !!"
+    ],
+    "você é humano": [
+        "Não, sou um programa!",
+        "Sou uma IA !!"
+    ],
+    "": [
+        "Pode repetir?",
+        "Não entendi muito bem !!"
+    ],
+    "quanto e 1+1": [
+        "A resposta é 2"
+    ],
+    "1+1?": [
+        "2"
+    ]
+}
