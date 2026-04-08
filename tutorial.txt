@@ -1,0 +1,116 @@
+TUTORIAL: COMO USAR O CHATBOT COM INTERFACE WEB
+================================================
+
+Este tutorial explica como configurar e usar um chatbot com memória local
+e interface web simples. Funciona em Windows, Linux ou Mac, usando Python.
+
+REQUISITOS
+----------
+1. Python 3.10 ou superior instalado.
+2. Acesso à internet (para instalar pacotes e opcionalmente para integrar OpenAI).
+3. Editor de texto ou IDE (VSCode, PyCharm, Notepad++, etc.)
+
+PASTA DO PROJETO
+----------------
+Crie uma pasta para o projeto, por exemplo:
+
+C:\Users\SeuUsuario\chatbot_interface
+
+Dentro desta pasta, você terá a seguinte estrutura:
+
+chatbot_interface/
+│
+├─ app.py           (código do Flask)
+├─ memoria.json     (iniciar como arquivo vazio: {})
+└─ templates/
+    └─ index.html   (interface web)
+
+PASSO 1: CRIAR AMBIENTE VIRTUAL (RECOMENDADO)
+---------------------------------------------
+No terminal (CMD ou PowerShell), navegue até a pasta do projeto:
+
+cd C:\Users\SeuUsuario\chatbot_interface
+
+Crie o ambiente virtual:
+
+python -m venv venv
+
+Ative o ambiente virtual:
+
+- No CMD:
+  venv\Scripts\activate.bat
+
+- No PowerShell:
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+  venv\Scripts\Activate.ps1
+
+PASSO 2: INSTALAR DEPENDÊNCIAS
+-------------------------------
+Com o venv ativo, instale os pacotes necessários:
+
+pip install flask python-dotenv
+
+Se for integrar com OpenAI:
+
+pip install openai
+
+PASSO 3: CONFIGURAR MEMÓRIA
+---------------------------
+Crie um arquivo chamado `memoria.json` na pasta principal, com o conteúdo inicial:
+
+{}
+
+O chatbot irá gravar perguntas e respostas aprendidas neste arquivo.
+
+PASSO 4: ADICIONAR O CÓDIGO
+---------------------------
+Crie o arquivo `app.py` com o código do chatbot. Exemplo mínimo:
+
+(cole o código do app.py fornecido anteriormente)
+
+Crie a pasta `templates` e dentro dela o arquivo `index.html` com o código HTML fornecido.
+
+PASSO 5: RODAR O SERVIDOR
+-------------------------
+No terminal com o ambiente virtual ativo, execute:
+
+python app.py
+
+Se estiver tudo certo, verá:
+
+✅ Servidor iniciado. Abra http://127.0.0.1:5000
+
+PASSO 6: ACESSAR A INTERFACE
+----------------------------
+Abra um navegador e acesse:
+
+http://127.0.0.1:5000
+
+- Digite sua mensagem no campo de texto.
+- Clique em “Enviar” ou pressione Enter.
+- As respostas do bot aparecerão na tela.
+- Se o bot não souber a resposta, você poderá ensiná-lo, e ele lembrará da próxima vez.
+
+DICAS IMPORTANTES
+-----------------
+- Mensagens do usuário aparecem em azul, respostas do bot em cinza.
+- O arquivo `memoria.json` guarda tudo que o bot aprendeu.
+- Para limpar a memória, basta apagar o conteúdo do arquivo `memoria.json`.
+- Para usar o OpenAI GPT-4 ou outro modelo, instale a biblioteca `openai` e configure sua API key no arquivo `.env`.
+
+EXEMPLO DE ARQUIVO .env (opcional)
+----------------------------------
+Se for usar OpenAI, crie um arquivo `.env` na mesma pasta do `app.py`:
+
+OPENAI_API_KEY=sk-sua_chave_aqui
+
+Substitua `sk-sua_chave_aqui` pela sua chave real da OpenAI.
+
+FINALIZANDO
+------------
+Pronto! Agora você tem um chatbot funcional, com interface web, que pode:
+- Responder perguntas simples.
+- Aprender novas respostas com o usuário.
+- Manter a memória de conversa no arquivo JSON.
+
+Divirta-se conversando com seu chatbot 🤖
