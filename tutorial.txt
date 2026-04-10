@@ -112,5 +112,3 @@ Pronto! Agora você tem um chatbot funcional, com interface web, que pode:
 - Responder perguntas simples.
 - Aprender novas respostas com o usuário.
 - Manter a memória de conversa no arquivo JSON.
-
-Divirta-se conversando com seu chatbot 🤖

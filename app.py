@@ -1,84 +1,130 @@
 from flask import Flask, render_template, request, jsonify
-import json
-import os
 import random
-import unicodedata
-import difflib
+import re
+import time
+from intencoes import intencoes
+from busca_web import buscar_web
+from utils import normalizar, resumir
 
-arquivo = "memoria.json"
 app = Flask(__name__)
 
-# -------------------------
-# FUNÇÕES
-# -------------------------
 
-def normalizar(texto):
-    texto = texto.lower()
-    texto = unicodedata.normalize("NFD", texto)
-    texto = texto.encode("ascii", "ignore").decode("utf-8")
-    return texto.strip()
+PALAVRAS_MATEMATICAS = [
+    "quanto é", "calcule", "resultado de",
+    "vezes", "x", "mais", "menos", "dividido por"
+]
 
-def carregar_memoria():
-    if os.path.exists(arquivo):
-        with open(arquivo, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {}
+OPERADORES = ["+", "-", "*", "/"]
 
-def salvar_memoria(memoria):
-    with open(arquivo, "w", encoding="utf-8") as f:
-        json.dump(memoria, f, ensure_ascii=False, indent=4)
 
-def encontrar_resposta(msg, memoria):
-    chaves = memoria.keys()
-    parecido = difflib.get_close_matches(msg, chaves, n=1, cutoff=0.6)
-    if parecido:
-        return parecido[0], random.choice(memoria[parecido[0]])
-    return None, None
+def extrair_conta(msg):
+    msg = msg.lower()
 
-# -------------------------
-# ROTAS FLASK
-# -------------------------
+    substituicoes = {
+        "quanto é": "",
+        "quanto e": "",
+        "calcule": "",
+        "resultado de": "",
+        "vezes": "*",
+        "x": "*",
+        "mais": "+",
+        "menos": "-",
+        "dividido por": "/"
+    }
+
+    for k, v in substituicoes.items():
+        msg = msg.replace(k, v)
+
+
+    msg = re.sub(r'[^0-9\+\-\*\/\(\)\.\s]', '', msg)
+
+    return msg.strip()
+
+
+
+def calcular_matematica(expressao):
+    try:
+        if re.match(r'^[0-9\+\-\*\/\(\)\.\s]+$', expressao):
+            resultado = eval(expressao)
+            print("Conta:", expressao, "Resultado:", resultado)  # DEBUG
+            return f"O resultado é {resultado}"
+    except Exception as e:
+        print("Erro:", e)
+
+    return None
+
+
+
+def contem_operador(msg):
+    return any(op in msg for op in OPERADORES) or any(p in msg for p in PALAVRAS_MATEMATICAS)
+
+
+
+def detectar_intencao(msg):
+    melhor_intencao = None
+    maior_score = 0
+
+    for nome, dados in intencoes.items():
+        score = 0
+
+        for palavra in dados["palavras"]:
+            if palavra in msg:
+                if " " in palavra:
+                    score += 2
+                else:
+                    score += 1
+
+        if score > maior_score:
+            maior_score = score
+            melhor_intencao = nome
+
+    if maior_score > 0:
+        return melhor_intencao
+
+    return None
+
+
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
+
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
+
     msg_original = data.get("mensagem", "")
     msg = normalizar(msg_original)
-    
-    memoria = carregar_memoria()
-    respostas_padrao = ["Não entendi muito bem 🤔", "Pode explicar melhor?", "Ainda estou aprendendo 😅"]
-    
-    chave, resposta = encontrar_resposta(msg, memoria)
-    
-    if resposta:
-        return jsonify({"resposta": resposta})
-    else:
-        return jsonify({"resposta": random.choice(respostas_padrao)})
 
-@app.route("/ensinar", methods=["POST"])
-def ensinar():
-    data = request.get_json()
-    msg_original = data.get("mensagem", "")
-    resposta_nova = data.get("resposta", "")
-    
-    msg = normalizar(msg_original)
-    memoria = carregar_memoria()
-    
-    if msg in memoria:
-        memoria[msg].append(resposta_nova)
-    else:
-        memoria[msg] = [resposta_nova]
-    
-    salvar_memoria(memoria)
-    return jsonify({"resposta": "Agora aprendi! 🤖"})
+    time.sleep(3.5)
 
-# -------------------------
-# RODAR APP
-# -------------------------
+    
+    intencao = detectar_intencao(msg)
+    if intencao:
+        return jsonify({
+            "resposta": random.choice(intencoes[intencao]["respostas"])
+        })
+
+    
+    if contem_operador(msg):
+        conta = extrair_conta(msg)
+        resposta = calcular_matematica(conta)
+
+        if resposta:
+            return jsonify({"resposta": resposta})
+
+   
+    resposta_web = buscar_web(msg_original)
+    if resposta_web:
+        return jsonify({"resposta": resumir(resposta_web)})
+
+    
+    return jsonify({
+        "resposta": "Não consegui encontrar uma resposta."
+    })
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
